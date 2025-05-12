@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Removedor de Acentos | Ferramenta Profissional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f7ff;
+            padding: 0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .app-card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .app-header h1 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+        }
+
+        .app-header p {
+            opacity: 0.9;
+            font-weight: 400;
+            font-size: 1rem;
+        }
+
+        .app-body {
+            padding: 2rem;
+        }
+
+        .file-upload {
+            text-align: center;
+            margin: 2rem 0;
+        }
+
+        .file-upload-input {
+            display: none;
+        }
+
+        .file-upload-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 1rem;
+            box-shadow: 0 2px 10px rgba(67, 97, 238, 0.3);
+        }
+
+        .file-upload-label:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.4);
+        }
+
+        .file-upload-label i {
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        .file-name {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-weight: 400;
+        }
+
+        .preview-container {
+            display: none;
+            margin: 2rem 0;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .preview-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .preview-title i {
+            margin-right: 0.5rem;
+            color: var(--primary);
+        }
+
+        .preview-content {
+            padding: 1.5rem;
+            background: var(--light);
+            border: 1px dashed var(--light-gray);
+            border-radius: var(--border-radius);
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .btn-download {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 1rem;
+            margin-top: 1.5rem;
+            box-shadow: 0 2px 10px rgba(76, 201, 240, 0.3);
+        }
+
+        .btn-download:hover {
+            background: #3ab8dd;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(76, 201, 240, 0.4);
+        }
+
+        .btn-download i {
+            margin-right: 0.75rem;
+        }
+
+        .error-message {
+            color: #e63946;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: rgba(230, 57, 70, 0.1);
+            border-radius: var(--border-radius);
+            display: none;
+            align-items: center;
+        }
+
+        .error-message i {
+            margin-right: 0.5rem;
+        }
+
+        .info-box {
+            background: rgba(67, 97, 238, 0.05);
+            border-left: 4px solid var(--primary);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-top: 3rem;
+        }
+
+        .info-box h3 {
+            color: var(--dark);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.1rem;
+        }
+
+        .info-box h3 i {
+            margin-right: 0.75rem;
+            color: var(--primary);
+        }
+
+        .info-box ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-box li {
+            margin-bottom: 0.75rem;
+            line-height: 1.6;
+        }
+
+        .info-box p {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--gray);
+        }
+
+        .info-box strong {
+            color: var(--dark);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--gray);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .app-header {
+                padding: 1.5rem 1rem;
+            }
+            
+            .app-body {
+                padding: 1.5rem;
+            }
+            
+            .file-upload-label, .btn-download {
+                width: 100%;
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="app-card">
+            <div class="app-header">
+                <h1><i class="fas fa-text-width"></i> Removedor de Acentos</h1>
+                <p>Ferramenta profissional para processamento de arquivos de texto</p>
+            </div>
+            
+            <div class="app-body">
+                <div class="file-upload">
+                    <input type="file" id="arquivo" class="file-upload-input" accept=".txt">
+                    <label for="arquivo" class="file-upload-label">
+                        <i class="fas fa-file-upload"></i> Selecionar Arquivo TXT
+                    </label>
+                    <div id="file-name" class="file-name">Nenhum arquivo selecionado</div>
+                </div>
+                
+                <div id="error" class="error-message">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="error-text"></span>
+                </div>
+                
+                <div id="preview-container" class="preview-container">
+                    <div class="preview-title">
+                        <i class="fas fa-eye"></i> Pré-visualização (5 primeiras linhas)
+                    </div>
+                    <div id="preview" class="preview-content"></div>
+                    <button id="download-btn" class="btn-download">
+                        <i class="fas fa-file-download"></i> Baixar Arquivo Processado
+                    </button>
+                </div>
+                
+                <div class="info-box">
+                    <h3><i class="fas fa-info-circle"></i> Como usar:</h3>
+                    <ol>
+                        <li>Clique em "Selecionar Arquivo TXT"</li>
+                        <li>Escolha seu arquivo de texto (.txt) com a lista de cidades</li>
+                        <li>Visualize o resultado na pré-visualização</li>
+                        <li>Clique em "Baixar Arquivo Processado" para obter seu arquivo sem acentos</li>
+                    </ol>
+                    <p><strong>Segurança:</strong> Todo o processamento ocorre localmente no seu navegador. Seus dados não são enviados para nenhum servidor externo, garantindo total privacidade.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Removedor de Acentos &copy; <span id="year"></span> | Ferramenta desenvolvida por Anderson Fischer para processamento local de arquivos</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Atualiza o ano no footer
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
+            const fileInput = document.getElementById('arquivo');
+            const fileNameElement = document.getElementById('file-name');
+            const errorElement = document.getElementById('error');
+            const errorTextElement = document.getElementById('error-text');
+            const previewContainer = document.getElementById('preview-container');
+            const previewElement = document.getElementById('preview');
+            const downloadBtn = document.getElementById('download-btn');
+            
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                
+                // Reset
+                errorElement.style.display = 'none';
+                previewContainer.style.display = 'none';
+                
+                if (file) {
+                    fileNameElement.textContent = `Arquivo selecionado: ${file.name}`;
+                    
+                    if (!file.name.endsWith('.txt')) {
+                        showError('Por favor, selecione um arquivo .txt válido!');
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        try {
+                            const conteudo = e.target.result;
+                            const processado = removerAcentos(conteudo);
+                            
+                            // Mostrar preview (5 primeiras linhas)
+                            const linhas = processado.split('\n').slice(0, 5).join('\n');
+                            previewElement.textContent = linhas;
+                            previewContainer.style.display = 'block';
+                            
+                            // Configurar botão de download
+                            downloadBtn.onclick = function() {
+                                downloadFile(processado, file.name.replace('.txt', '_sem_acentos.txt'));
+                            };
+                        } catch (err) {
+                            showError('Erro ao processar o arquivo: ' + err.message);
+                            console.error(err);
+                        }
+                    };
+                    
+                    reader.onerror = function() {
+                        showError('Erro ao ler o arquivo. Tente novamente.');
+                    };
+                    
+                    reader.readAsText(file, 'UTF-8');
+                } else {
+                    fileNameElement.textContent = 'Nenhum arquivo selecionado';
+                }
+            });
+            
+            function showError(message) {
+                errorTextElement.textContent = message;
+                errorElement.style.display = 'flex';
+            }
+            
+            function removerAcentos(texto) {
+                // Usando Normalização Unicode para decompor os acentos
+                return texto.normalize('NFKD')
+                           .replace(/[\u0300-\u036f]/g, '')
+                           .normalize('NFC');
+            }
+            
+            function downloadFile(content, filename) {
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 100);
+            }
+        });
+    </script>
+</body>
+</html>
